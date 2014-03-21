@@ -30,12 +30,11 @@ carregamentos
 cartoes
 titulos
 passes
+operadores
 """
 
-for i in range(   ):
+for i in range():
   foperador.write(str(i+1)+'|'+str(operadores[i])+'|'+str(fake.random_int(min=299999999, max=999999999))+'|'+str(fake.random_int(min=5000, max=50000))+'\n')
-
-
 
 for i in range(0,20):
   idcartao = str(i+1)
@@ -45,31 +44,35 @@ for i in range(0,20):
 
   # por cada 10 cartoes gerados, um é passe
   if i %10 == 0:
-    """
-    valor
-    ultimoCarregamento
-    estado
-    bi
-    nome
-    nif
-    profissao
-    estadocivil
-    telemovel
-    morada
-    datanascimento
-    """
+    valor = fake.random_int(min=5, max=60)
+    ultimoCarregamento = fake.date_time_between(start_date="-10y", end_date=datavenda)
+    estado = choice(['true', 'false'])
+    bi = fake.random_int(min=99999999, max=999999999)
+    nome = fake.name()
+    nif = fake.random_int(min=99999999, max=299999999)
+    profissao = fake.job()
+    estadocivil = choice(['casado', 'solteiro', 'viuvo'])
+    telemovel = fake.phone_number()
+    morada = fake.address()
 
-    #fpasse.write(idcartao+'|'+  +'\n')
+    #Pelo menos 10 anos mais novo do que a data de compra
+    data = datetime.datetime(datavenda.year-10, datavenda.month, datavenda.day, datavenda.hour, datavenda.minute, datavenda.second)
+    datanascimento = fake.date_time_between(start_date="-40y", end_date=data
 
+    fpasse.write(idcartao+'|'+valor+'|'+ultimoCarregamento+'|'+estado+'|'+bi+'|'+nome+'|'+nif+'|'+profissao+'|'+estadocivil+'|'+telemovel+'|'+morada+'|'+datanascimento+'\n')
 
+    # gerar as validaçoes
+    # gerar os carregamentos
 
   # os restantes sao titulos
   else:
     nviagens = random.randint(1,20)
     viagensGastas = 20 - nviagens
 
-    # validacoes das viagens dos titulos
+    # gerar as validaçoes
     for i in range (viagensGastas):
+
+    # gerar os carregamentos
 
 
     ftitulo.write(idcartao+'|'+nviagens+'\n')
