@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from datetime import datetime
 from faker import Factory
-from random import randint
+from random import *
 fake = Factory.create('it_IT')
 
 operadores = ['Metro do Porto', 'STCP', 'CP', 'Resende', 'ES - Espirito Santo', 'Maia Transportes', 'MGC Transportes', 'A. Nogueira da Costa, Lda', 'Auto-Viação Pacense', 'Valpi Grupo', 'ETG Empresa de Transportes Gondomarense, Lda']
@@ -45,26 +46,25 @@ for i in range(0,20):
     morada = fake.address()
 
     #Pelo menos 10 anos mais novo do que a data de compra
-    data = datetime.datetime(datavenda.year-10, datavenda.month, datavenda.day, datavenda.hour, datavenda.minute, datavenda.second)
-    datanascimento = fake.date_time_between(start_date="-40y", end_date=data
-
-    fpasse.write(idcartao+'|'+valor+'|'+ultimoCarregamento+'|'+estado+'|'+bi+'|'+nome+'|'+nif+'|'+profissao+'|'+estadocivil+'|'+telemovel+'|'+morada+'|'+datanascimento+'\n')
+    data = datetime(datavenda.year-10, datavenda.month, datavenda.day, datavenda.hour, datavenda.minute, datavenda.second)
+    datanascimento = fake.date_time_between(start_date="-40y", end_date=data)
+    fpasse.write(str(idcartao)+'|'+str(valor)+'|'+str(ultimoCarregamento)+'|'+str(estado)+'|'+str(bi)+'|'+str(nome)+'|'+str(nif)+'|'+str(profissao)+'|'+str(estadocivil)+'|'+str(telemovel)+'|'+str(morada)+'|'+str(datanascimento)+'\n')
 
     # gerar as validaçoes
     # gerar os carregamentos
 
   # os restantes sao titulos
   else:
-    nviagens = random.randint(1,20)
+    nviagens = randint(1,20)
     viagensGastas = 20 - nviagens
 
     # gerar as validaçoes
-    for i in range (viagensGastas):
+    #for i in range (viagensGastas):
 
     # gerar os carregamentos
 
 
-    ftitulo.write(idcartao+'|'+nviagens+'\n')
+    ftitulo.write(str(idcartao)+'|'+str(nviagens)+'\n')
 
 fcartao.close()
 fpasse.close()
