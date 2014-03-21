@@ -21,20 +21,9 @@ foperador = open('D:/DBTP2/operador', 'w')
 for i in range(len(operadores)):
   foperador.write(str(i+1)+'|'+str(operadores[i])+'|'+str(fake.random_int(min=299999999, max=999999999))+'|'+str(fake.random_int(min=5000, max=50000))+'\n')
 
-"""
-ordem da dimensao de dados:
-
-validacoes
-viagens
-carregamentos
-cartoes
-titulos
-passes
-operadores
-"""
-
-for i in range():
-  foperador.write(str(i+1)+'|'+str(operadores[i])+'|'+str(fake.random_int(min=299999999, max=999999999))+'|'+str(fake.random_int(min=5000, max=50000))+'\n')
+#gerar viagens
+#for i in range():
+#  foperador.write(str(i+1)+'|'+str(operadores[i])+'|'+str(fake.random_int(min=299999999, max=999999999))+'|'+str(fake.random_int(min=5000, max=50000))+'\n')
 
 for i in range(0,20):
   idcartao = str(i+1)

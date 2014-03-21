@@ -1,1 +1,22 @@
 Repositorio de SGD
+
+
+ordem da dimensao de dados (maior para o mais pequeno):
+  validacoes
+  viagens
+  carregamentos
+  cartoes
+  titulos
+  passes
+  operadores
+
+
+-> Gerados os operadores
+-> Gerados os cartões
+-> Gerados os Passes
+-> Gerados os titulos
+
+Falta gerar:
+-> Validações
+-> Carregamentos
+-> Viagens
