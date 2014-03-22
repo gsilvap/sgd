@@ -21,7 +21,7 @@ telemovel = fake.phone_number()
 morada = fake.address()
 
 data = datetime.datetime(datavenda.year-10, datavenda.month, datavenda.day, datavenda.hour, datavenda.minute, datavenda.second)
-datanascimento = fake.date_time_between(start_date="-50y", end_date=datavenda)
+datanascimento = fake.date_time_between(start_date="-40y", end_date=data)
 
 print(valor)
 print(ultimoCarregamento)
