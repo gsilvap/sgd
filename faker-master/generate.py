@@ -31,7 +31,8 @@ for i in range(len(operadores)):
 #  seed()
 #  fviagem.write(str(i+1)+'|'+str(choice(estacoes))+'\n')
 
-cartoes = 1000
+cartoes = 500000
+#cartoes = 800000
 print('cartoes \t'+str(cartoes))
 for i in range(0,cartoes):
   seed()

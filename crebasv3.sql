@@ -135,7 +135,9 @@ alter table CARREGAMENTO add constraint FK_REFERENCE_7 foreign key (IDCARTAO)
 alter table PASSE add constraint FK_INHERITANCE_1 foreign key (IDCARTAO)
       references CARTAO (IDCARTAO) on delete restrict on update restrict;
 
-alter table TITULO add constraint FK_INHERITANCE_1 foreign key (IDCARTAO)
+/*alter table TITULO add constraint FK_INHERITANCE_1 foreign key (IDCARTAO)*/
+/*      references CARTAO (IDCARTAO) on delete restrict on update restrict;*/
+alter table TITULO add constraint FK_INHERITANCE_2 foreign key (IDCARTAO)
       references CARTAO (IDCARTAO) on delete restrict on update restrict;
 
 alter table VALIDACAO add constraint FK_REFERENCE_6 foreign key (IDCARTAO)
