@@ -51,7 +51,7 @@ for i in range(0,cartoes):
     profissao = fake.job()
     estadocivil = choice(['casado', 'solteiro', 'viuvo'])
     telemovel = fake.phone_number()
-    morada = fake.address()
+    morada = fake.city()
 
     #Pelo menos 10 anos mais novo do que a data de compra
     data = datetime(datavenda.year-10, datavenda.month, datavenda.day, datavenda.hour, datavenda.minute, datavenda.second)
