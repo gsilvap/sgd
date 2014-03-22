@@ -1,6 +1,5 @@
 Repositorio de SGD
 
-
 ordem da dimensao de dados (maior para o mais pequeno):
 -validacoes
 -viagens
@@ -10,13 +9,12 @@ ordem da dimensao de dados (maior para o mais pequeno):
 -passes
 -operadores (11)
 
-
 -> Gerados os Operadores
 -> Gerados os Cartões
 -> Gerados os Passes
 -> Gerados os titulos
+-> Geradas as Validações
+-> Gerados os Carregamentos
+-> Geradas as Viagens
 
-Falta gerar:
--> Validações
--> Carregamentos
--> Viagens
+Problemas com a herança cartao -> titulo e passe... tentar saber como resolver...
