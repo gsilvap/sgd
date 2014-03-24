@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from faker import Factory
 from random import *
 fake = Factory.create('it_IT')
@@ -9,7 +9,7 @@ estacoes = ['Senhor de Matosinhos', 'Mercado', 'Brito Capelo', 'Matosinhos Sul',
 #operadores = ['Metro do Porto', 'STCP', 'CP', 'Resende', 'ES - Espirito Santo', 'Maia Transportes', 'MGC Transportes', 'A. Nogueira da Costa, Lda', 'Auto-Viação Pacense', 'Valpi Grupo', 'ETG Empresa de Transportes Gondomarense, Lda']
 #estacoes = ['Senhor de Matosinhos', 'Mercado', 'Brito Capelo', 'Matosinhos Sul', 'Câmara de Matosinhos', 'Parque Real', 'Pedro Hispano', 'Estádio do Mar', 'Vasco da Gama', 'Póvoa de Varzim', 'São Brás', 'Portas Fronhas', 'Alto do Pega', 'Vila do Conde', 'Santa Clara', 'Azurara', 'Árvore', 'Varziela', 'Espaço Natureza', 'Mindelo', 'Modivas Centro', 'Modivas Sul', 'Vilar do Pinheiro', 'Lidador', 'Pedras Rubras', 'ISMAI', 'Castêlo da Maia', 'Mandim', 'Zona Industrial', 'Fórum da Maia', 'Parque da Maia', 'Custió', 'Araújo', 'Pias', 'Cândido dos Reis', 'Santo Ovídio', 'D. João II', 'João de Deus', 'Câmara de Gaia', 'General Torres', 'Jardim do Morro', 'São Bento', 'Aliados', 'Trindade', 'Faria Guimarães', 'Marquês', 'Combatentes', 'Salgueiros', 'Pólo Universitário', 'IPO', 'Hospital de São João', 'Aeroporto', 'Botica', 'Contumil', 'Nasoni', 'Nau Vitória', 'Levada', 'Rio Tinto', 'Campainha', 'Baguim', 'Carreira', 'Venda Nova', 'Fânzeres', 'Trindade', 'Senhora da Hora', 'Sete Bicas', 'Viso', 'Ramalde', 'Francos', 'Casa da Música', 'Carolina Michaëlis', 'Lapa', 'Bolhão', 'Campo 24 de Agosto', 'Heroísmo', 'Campanhã', 'Estádio do Dragão', 'Fonte do Cuco', 'Verdes', 'Crestins', 'Esposade', 'Custóias', 'Batalha', 'Ribeira']
 
-path = 'D:/DBTP2/'
+path = 'D:/DBTP/'
 
 fcartao = open(path + 'cartao', 'w')
 fpasse = open(path + 'passe', 'w')
@@ -22,6 +22,8 @@ foperador = open(path + 'operador', 'w')
 idcarregamento = 1
 idviagem = 1
 idvalidacao = 1
+
+variacao_n_horas_validacoes = 1
 
 for i in range(len(operadores)):
   seed()
@@ -62,8 +64,8 @@ for i in range(0,cartoes):
 
     # gerar os carregamentos
     for j in range(randint(2,10)):
-      seed()
-      nviagens = 62
+      #seed()
+      nviagens = 21
       valor = nviagens * 2
       datacarregamento = fake.date_time_between(start_date=datavenda, end_date="+1y")
       maquina = randint(1,1000)
@@ -78,7 +80,7 @@ for i in range(0,cartoes):
 
       # gerar as viagens
       for k in range(nviagens):
-        seed()
+        #seed()
 
         localentrada = choice(estacoes)
 
@@ -87,11 +89,16 @@ for i in range(0,cartoes):
 
         # gerar as validaçoes
         for m in range (randint(1,5)):
-          seed()
+          #seed()
           idoperador = randint(1,len(operadores))
 
-          datafinal = datetime(datacarregamento.year, datacarregamento.month, datacarregamento.day, datacarregamento.hour+2, datacarregamento.minute, datacarregamento.second)
-
+          datafinal = datacarregamento + timedelta(minutes=60)
+          """
+          if datacarregamento.hour+variacao_n_horas_validacoes > 23:
+            datafinal = datetime(datacarregamento.year, datacarregamento.month, datacarregamento.day+1, datacarregamento.hour+variacao_n_horas_validacoes%24, datacarregamento.minute, datacarregamento.second)
+          else:
+            datafinal = datetime(datacarregamento.year, datacarregamento.month, datacarregamento.day, datacarregamento.hour+variacao_n_horas_validacoes, datacarregamento.minute, datacarregamento.second)
+          """
           datavalidacao = fake.date_time_between(start_date=datacarregamento, end_date=datafinal)
 
           fvalidacao.write(str(idcartao)+'|'+
@@ -112,7 +119,7 @@ for i in range(0,cartoes):
 
     # gerar os carregamentos
     for j in range(randint(2,10)):
-      seed()
+      #seed()
       valor = nviagens * 2
       datacarregamento = fake.date_time_between(start_date=datavenda, end_date="+1y")
       maquina = randint(1,1000)
@@ -127,7 +134,7 @@ for i in range(0,cartoes):
 
       # gerar as viagens
       for k in range(nviagens):
-        seed()
+        #seed()
 
         localentrada = choice(estacoes)
 
@@ -136,11 +143,16 @@ for i in range(0,cartoes):
 
         # gerar as validaçoes
         for m in range (randint(1,5)):
-          seed()
+          #seed()
           idoperador = randint(1,len(operadores))
 
-          datafinal = datetime(datacarregamento.year, datacarregamento.month, datacarregamento.day, datacarregamento.hour+2, datacarregamento.minute, datacarregamento.second)
-
+          datafinal = datacarregamento + timedelta(minutes=60)
+          """
+          if datacarregamento.hour+variacao_n_horas_validacoes > 23:
+            datafinal = datetime(datacarregamento.year, datacarregamento.month, datacarregamento.day+1, datacarregamento.hour+variacao_n_horas_validacoes%24, datacarregamento.minute, datacarregamento.second)
+          else:
+            datafinal = datetime(datacarregamento.year, datacarregamento.month, datacarregamento.day, datacarregamento.hour+variacao_n_horas_validacoes, datacarregamento.minute, datacarregamento.second)
+          """
           datavalidacao = fake.date_time_between(start_date=datacarregamento, end_date=datafinal)
 
           fvalidacao.write(str(idcartao)+'|'+
