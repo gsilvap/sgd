@@ -36,7 +36,6 @@ for i in range(len(operadores)):
 
 cartoes = 1000
 #cartoes = 800000
-print('cartoes \t'+str(cartoes))
 for i in range(0,cartoes):
   seed()
   idcartao = str(i+1)
@@ -89,7 +88,7 @@ for i in range(0,cartoes):
 
         # gerar as validaçoes
         for m in range (randint(1,5)):
-          #seed()
+          seed()
           idoperador = randint(1,len(operadores))
 
           datafinal = datacarregamento + timedelta(minutes=60)
@@ -143,7 +142,7 @@ for i in range(0,cartoes):
 
         # gerar as validaçoes
         for m in range (randint(1,5)):
-          #seed()
+          seed()
           idoperador = randint(1,len(operadores))
 
           datafinal = datacarregamento + timedelta(minutes=60)
@@ -174,9 +173,9 @@ fviagem.close()
 fvalidacao.close()
 foperador.close()
 
-
+print('cartoes \t\t'+str(cartoes))
 print('carregamentos \t'+str(idcarregamento))
 print('viagens \t\t'+str(idviagem))
-print('validacoes \t'+str(idvalidacao))
+print('validacoes \t\t'+str(idvalidacao))
 
 #varias validaçoes, da mesma viagem, do mesmo operador
