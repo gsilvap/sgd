@@ -173,9 +173,9 @@ fviagem.close()
 fvalidacao.close()
 foperador.close()
 
-print('cartoes \t\t'+str(cartoes))
+print('cartoes \t\t\t'+str(cartoes))
 print('carregamentos \t'+str(idcarregamento))
-print('viagens \t\t'+str(idviagem))
+print('viagens \t\t\t'+str(idviagem))
 print('validacoes \t\t'+str(idvalidacao))
 
 #varias validaçoes, da mesma viagem, do mesmo operador
