@@ -121,13 +121,13 @@ create table VIAGEM
    primary key (ID)
 );
 
-load data infile "D:/DBTP2/CARREGAMENTO" into table CARREGAMENTO fields terminated by "|" lines terminated by "\r\n";
-load data infile "D:/DBTP2/CARTAO" into table CARTAO fields terminated by "|" lines terminated by "\r\n";
-load data infile "D:/DBTP2/OPERADOR" into table OPERADOR fields terminated by "|" lines terminated by "\r\n";
-load data infile "D:/DBTP2/TITULO" into table TITULO fields terminated by "|" lines terminated by "\r\n";
-load data infile "D:/DBTP2/VALIDACAO" into table VALIDACAO fields terminated by "|" lines terminated by "\r\n";
-load data infile "D:/DBTP2/VIAGEM" into table VIAGEM fields terminated by "|" lines terminated by "\r\n";
-load data infile "D:/DBTP2/PASSE" into table PASSE fields terminated by "|" lines terminated by "\r\n";
+load data infile "D:/DBTP21000cartoes/CARREGAMENTO" into table CARREGAMENTO fields terminated by "|" lines terminated by "\r\n";
+load data infile "D:/DBTP21000cartoes/CARTAO" into table CARTAO fields terminated by "|" lines terminated by "\r\n";
+load data infile "D:/DBTP21000cartoes/OPERADOR" into table OPERADOR fields terminated by "|" lines terminated by "\r\n";
+load data infile "D:/DBTP21000cartoes/TITULO" into table TITULO fields terminated by "|" lines terminated by "\r\n";
+load data infile "D:/DBTP21000cartoes/VALIDACAO" into table VALIDACAO fields terminated by "|" lines terminated by "\r\n";
+load data infile "D:/DBTP21000cartoes/VIAGEM" into table VIAGEM fields terminated by "|" lines terminated by "\r\n";
+load data infile "D:/DBTP21000cartoes/PASSE" into table PASSE fields terminated by "|" lines terminated by "\r\n";
 
 alter table CARREGAMENTO add constraint FK_REFERENCE_7 foreign key (IDCARTAO)
       references CARTAO (IDCARTAO) on delete restrict on update restrict;
@@ -148,3 +148,15 @@ alter table VALIDACAO add constraint FK_RELATIONSHIP_10 foreign key (IDVIAGEM)
 
 alter table VALIDACAO add constraint FK_RELATIONSHIP_9 foreign key (IDOPERADOR)
       references OPERADOR (IDOPERADOR) on delete restrict on update restrict;
+
+
+/*
+select * from validacao;
+
+LEFT JOIN T2 ON T2.A=T1.A
+*/
+
+select v2.IDVALIDACAO, v2.IDVIAGEM, v.IDVIAGEM 
+from validacao v, validacao v2 
+where v2.IDVIAGEM = v.IDVIAGEM 
+group by v.IDVALIDACAO;
