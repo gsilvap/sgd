@@ -32,7 +32,7 @@ for i in range(len(operadores)):
 #  seed()
 #  fviagem.write(str(i+1)+'|'+str(choice(estacoes))+'\n')
 
-cartoes = 500000
+cartoes = 1000
 #cartoes = 800000
 print('cartoes \t'+str(cartoes))
 for i in range(0,cartoes):
@@ -89,7 +89,10 @@ for i in range(0,cartoes):
         for m in range (randint(1,5)):
           seed()
           idoperador = randint(1,len(operadores))
-          datavalidacao = fake.date_time_between(start_date=datacarregamento, end_date="+1y")
+
+          datafinal = datetime(datacarregamento.year, datacarregamento.month, datacarregamento.day, datacarregamento.hour+2, datacarregamento.minute, datacarregamento.second)
+
+          datavalidacao = fake.date_time_between(start_date=datacarregamento, end_date=datafinal)
 
           fvalidacao.write(str(idcartao)+'|'+
                     str(idvalidacao)+'|'+
@@ -135,7 +138,10 @@ for i in range(0,cartoes):
         for m in range (randint(1,5)):
           seed()
           idoperador = randint(1,len(operadores))
-          datavalidacao = fake.date_time_between(start_date=datacarregamento, end_date="+1y")
+
+          datafinal = datetime(datacarregamento.year, datacarregamento.month, datacarregamento.day, datacarregamento.hour+2, datacarregamento.minute, datacarregamento.second)
+
+          datavalidacao = fake.date_time_between(start_date=datacarregamento, end_date=datafinal)
 
           fvalidacao.write(str(idcartao)+'|'+
                     str(idvalidacao)+'|'+
