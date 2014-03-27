@@ -1,8 +1,14 @@
 drop database tp2;
-create database tp2;
+create database tp100cartoes;
 
-use tp2;
+use tp100cartoes;
 
+alter table CARREGAMENTO drop foreign key FK_REFERENCE_7;
+alter table PASSE drop foreign key FK_INHERITANCE_1;
+alter table TITULO drop foreign key FK_INHERITANCE_2;
+alter table VALIDACAO drop foreign key FK_REFERENCE_6;
+alter table VALIDACAO drop foreign key FK_RELATIONSHIP_10;
+alter table VALIDACAO drop foreign key FK_RELATIONSHIP_9;
 
 truncate CARREGAMENTO;
 truncate CARTAO;
@@ -121,13 +127,13 @@ create table VIAGEM
    primary key (ID)
 );
 
-load data infile "D:/DBTP21000cartoes/CARREGAMENTO" into table CARREGAMENTO fields terminated by "|" lines terminated by "\r\n";
-load data infile "D:/DBTP21000cartoes/CARTAO" into table CARTAO fields terminated by "|" lines terminated by "\r\n";
-load data infile "D:/DBTP21000cartoes/OPERADOR" into table OPERADOR fields terminated by "|" lines terminated by "\r\n";
-load data infile "D:/DBTP21000cartoes/TITULO" into table TITULO fields terminated by "|" lines terminated by "\r\n";
-load data infile "D:/DBTP21000cartoes/VALIDACAO" into table VALIDACAO fields terminated by "|" lines terminated by "\r\n";
-load data infile "D:/DBTP21000cartoes/VIAGEM" into table VIAGEM fields terminated by "|" lines terminated by "\r\n";
-load data infile "D:/DBTP21000cartoes/PASSE" into table PASSE fields terminated by "|" lines terminated by "\r\n";
+load data infile "D:/DBTP/VIAGEM" into table VIAGEM fields terminated by "|" lines terminated by "\r\n";
+load data infile "D:/DBTP/OPERADOR" into table OPERADOR fields terminated by "|" lines terminated by "\r\n";
+load data infile "D:/DBTP/CARTAO" into table CARTAO fields terminated by "|" lines terminated by "\r\n";
+load data infile "D:/DBTP/TITULO" into table TITULO fields terminated by "|" lines terminated by "\r\n";
+load data infile "D:/DBTP/PASSE" into table PASSE fields terminated by "|" lines terminated by "\r\n";
+load data infile "D:/DBTP/CARREGAMENTO" into table CARREGAMENTO fields terminated by "|" lines terminated by "\r\n";
+load data infile "D:/DBTP/VALIDACAO" into table VALIDACAO fields terminated by "|" lines terminated by "\r\n";
 
 alter table CARREGAMENTO add constraint FK_REFERENCE_7 foreign key (IDCARTAO)
       references CARTAO (IDCARTAO) on delete restrict on update restrict;
@@ -155,8 +161,166 @@ select * from validacao;
 
 LEFT JOIN T2 ON T2.A=T1.A
 */
-
 select v2.IDVALIDACAO, v2.IDVIAGEM, v.IDVIAGEM 
 from validacao v, validacao v2 
 where v2.IDVIAGEM = v.IDVIAGEM 
 group by v.IDVALIDACAO;
+
+
+drop PROCEDURE lucrosViagem;
+
+/* divisao das receitas da viagem com o id = 1*/
+DELIMITER $$
+CREATE PROCEDURE lucrosViagem(in idviagem int)
+BEGIN 
+	select * from (select IDOPERADOR, count(*)*2/ (
+		select count(*) from validacao INNER JOIN viagem on validacao.IDVIAGEM = idviagem group by validacao.IDVIAGEM) Receitas
+	from validacao 
+	INNER JOIN viagem on validacao.IDVIAGEM = idviagem group by validacao.IDOPERADOR) cenas;
+END;
+$$ DELIMITER ;
+
+drop PROCEDURE lucrosViagemOperador;
+
+/* test */
+DELIMITER $$
+CREATE PROCEDURE lucrosViagemOperador(in idviagem int, in idoperador int)
+BEGIN 
+	select receitas from (select IDOPERADOR, count(*)*2/ (
+		select count(*) from validacao INNER JOIN viagem on validacao.IDVIAGEM = idviagem group by validacao.IDVIAGEM) Receitas
+	from validacao  
+	INNER JOIN viagem on validacao.IDVIAGEM = idviagem where idoperador = validacao.idoperador group by validacao.IDOPERADOR) cenas;
+END;
+$$ DELIMITER ;
+
+select idoperador, nome from operador;
+
+
+drop PROCEDURE lucros;
+
+call lucros();
+
+DELIMITER $$
+CREATE PROCEDURE lucros()
+BEGIN 
+	declare counter INT default 0;
+	declare idviagemaux INT;
+	declare idoperadoraux INT;
+	declare nomeaux CHAR(50);
+	declare lucroaux float;
+
+	DECLARE done INT default false;
+	
+	declare viagemCursor Cursor for select id from viagem;
+	declare operadorCursor Cursor for select idoperador, nome from operador;
+	declare continue handler for not found set done := true;
+	
+	drop temporary table if exists lucros;
+
+	create temporary table lucros 
+	(
+	   IDOPERADOR           int,
+	   NOME                 char(50),
+	   LUCRO                float default 0,
+		primary key (IDOPERADOR)
+	) ENGINE = MEMORY;
+
+	open operadorCursor;
+
+	operadorLoop1 : loop
+
+		fetch operadorCursor into idoperadoraux , nomeaux ;
+      
+		if done then
+			set done := false;
+			leave operadorLoop1;
+		end if;
+    
+		insert into lucros (idoperador, nome, lucro) values (idoperadoraux, nomeaux, 0);
+
+	end loop operadorLoop1;
+    
+	close operadorCursor;
+
+	#select * from lucros;
+
+	open operadorCursor;
+	select count(viagemCursor);
+	operadorLoop : loop
+		
+		fetch operadorCursor into idoperadoraux , nomeaux ;
+
+		if done then
+			leave operadorLoop;
+		end if;
+	
+		open viagemCursor;
+		SELECT FOUND_ROWS(); 
+		viagemLoop : loop
+		
+			fetch viagemCursor into idviagemaux;
+			#select idviagemaux;
+			#set counter := counter + 1;
+
+			if done then
+				set done := false;
+				leave viagemLoop;
+			end if;
+			
+			select receitas into lucroaux from (select IDOPERADOR, count(*)*2/ (
+				select count(*) from validacao INNER JOIN viagem on validacao.IDVIAGEM = idviagemaux group by validacao.IDVIAGEM) Receitas
+			from validacao  
+			INNER JOIN viagem on validacao.IDVIAGEM = idviagemaux where validacao.idoperador = idoperadoraux group by validacao.IDOPERADOR) cenas;
+			
+			if lucroaux is not null then
+				update lucros set lucro = lucro + lucroaux where idoperador = idoperadoraux;
+				#select * from lucros;
+			end if;
+
+		end loop viagemLoop;
+		
+		close viagemCursor;
+
+	end loop operadorLoop;
+		
+	close operadorCursor;
+	
+	#select counter;
+
+	select * from lucros;
+
+END;
+$$ DELIMITER ;
+
+
+
+
+call lucrosViagem(2);
+call lucrosViagemOperador(2,3);
+
+
+DELIMITER $$
+CREATE PROCEDURE sumLucrosViagem(out lucrosTable int)
+BEGIN 
+	
+		select * from (call lucrosViagem(1)) as cenas;
+END;
+$$ DELIMITER ;
+
+CREATE TEMPORARY TABLE foo call lucrosViagem(1);
+
+
+
+
+select IDOPERADOR, count(*)*2/ (select count(*) from validacao
+INNER JOIN viagem on validacao.IDVIAGEM = viagem.ID where IDVIAGEM = 2 group by IDVIAGEM) Receitas
+ from validacao
+INNER JOIN viagem on validacao.IDVIAGEM = viagem.ID where IDVIAGEM = 2 group by IDOPERADOR;
+
+select * from validacao left JOIN viagem on validacao.IDVIAGEM = viagem.ID right JOIN viagem on validacao.IDVIAGEM = viagem.ID group by IDVIAGEM;
+
+select * from validacao where IDVIAGEM = 1;
+
+select * from validacao where IDVIAGEM = 2;
+
+select IDOPERADOR from operador;
