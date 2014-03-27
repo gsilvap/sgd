@@ -97,9 +97,8 @@ BEGIN
 	
 	#select counterOperadores, counterViagens, counterUpdates;
 
-	select * from lucro;
-	select sum(LUCRO_LUCROS) from lucro;
-	select count(*)*2 from viagem;
+	select IDOPERADOR_LUCROS "ID Operador", NOME_LUCROS "Nome", LUCRO_LUCROS "Receitas" from lucro;
+	select * from (select sum(LUCRO_LUCROS) "Receitas aproximadas" from lucro) somaLucros, (select count(*)*2 "Receitas reais" from viagem) valorreal;
 
 END;
 $$ DELIMITER ;
