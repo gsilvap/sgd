@@ -34,7 +34,7 @@ for i in range(len(operadores)):
 #  seed()
 #  fviagem.write(str(i+1)+'|'+str(choice(estacoes))+'\n')
 
-cartoes = 10
+cartoes = 500000
 #cartoes = 800000
 for i in range(0,cartoes):
   seed()
@@ -92,12 +92,7 @@ for i in range(0,cartoes):
           idoperador = randint(1,len(operadores))
 
           datafinal = datacarregamento + timedelta(minutes=60)
-          """
-          if datacarregamento.hour+variacao_n_horas_validacoes > 23:
-            datafinal = datetime(datacarregamento.year, datacarregamento.month, datacarregamento.day+1, datacarregamento.hour+variacao_n_horas_validacoes%24, datacarregamento.minute, datacarregamento.second)
-          else:
-            datafinal = datetime(datacarregamento.year, datacarregamento.month, datacarregamento.day, datacarregamento.hour+variacao_n_horas_validacoes, datacarregamento.minute, datacarregamento.second)
-          """
+
           datavalidacao = fake.date_time_between(start_date=datacarregamento, end_date=datafinal)
 
           fvalidacao.write(str(idcartao)+'|'+
@@ -112,27 +107,50 @@ for i in range(0,cartoes):
   # titulos
   else:
     nviagens = randint(1,20)
-    viagensGastas = randint(nviagens,nviagens+5) - nviagens
+    viagensGastas = randint(1,100)
 
     ftitulo.write(str(idcartao)+'|'+str(nviagens)+'\n')
 
-    # gerar os carregamentos
-    for j in range(randint(2,10)):
+    # gerar viagens por gastar
+    while nviagens > 0:
+      cviagens = randint(1,nviagens)
+      nviagens -= cviagens
+
+    #for j in range(randint(2,10)):
       #seed()
-      valor = nviagens * 2
+      valor = cviagens * 2
       datacarregamento = fake.date_time_between(start_date=datavenda, end_date="+1y")
       maquina = randint(1,1000)
 
       fcarregamento.write(str(idcarregamento)+'|'+
                     str(idcartao)+'|'+
                     str(datacarregamento)+'|'+
-                    str(nviagens)+'|'+
+                    str(cviagens)+'|'+
+                    str(valor)+'|'+
+                    str(maquina)+'\n')
+      idcarregamento += 1
+
+    # gerar viagens gastas
+    while viagensGastas > 0:
+      cviagens = randint(1,viagensGastas)
+      viagensGastas -= cviagens
+
+    #for j in range(randint(2,10)):
+      #seed()
+      valor = cviagens * 2
+      datacarregamento = fake.date_time_between(start_date=datavenda, end_date="+1y")
+      maquina = randint(1,1000)
+
+      fcarregamento.write(str(idcarregamento)+'|'+
+                    str(idcartao)+'|'+
+                    str(datacarregamento)+'|'+
+                    str(cviagens)+'|'+
                     str(valor)+'|'+
                     str(maquina)+'\n')
       idcarregamento += 1
 
       # gerar as viagens
-      for k in range(nviagens):
+      for k in range(cviagens):
         #seed()
 
         localentrada = choice(estacoes)
@@ -146,12 +164,7 @@ for i in range(0,cartoes):
           idoperador = randint(1,len(operadores))
 
           datafinal = datacarregamento + timedelta(minutes=60)
-          """
-          if datacarregamento.hour+variacao_n_horas_validacoes > 23:
-            datafinal = datetime(datacarregamento.year, datacarregamento.month, datacarregamento.day+1, datacarregamento.hour+variacao_n_horas_validacoes%24, datacarregamento.minute, datacarregamento.second)
-          else:
-            datafinal = datetime(datacarregamento.year, datacarregamento.month, datacarregamento.day, datacarregamento.hour+variacao_n_horas_validacoes, datacarregamento.minute, datacarregamento.second)
-          """
+
           datavalidacao = fake.date_time_between(start_date=datacarregamento, end_date=datafinal)
 
           fvalidacao.write(str(idcartao)+'|'+
