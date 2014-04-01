@@ -1,22 +1,5 @@
-/*==============================================================*/
-/* DBMS name:      MySQL 5.0                                    */
-/* Created on:     20/03/2014 14:33:38                          */
-/*==============================================================*/
-
-
-drop table if exists CARREGAMENTO;
-
-drop table if exists CARTAO;
-
-drop table if exists OPERADOR;
-
-drop table if exists PASSE;
-
-drop table if exists TITULO;
-
-drop table if exists VALIDACAO;
-
-drop table if exists VIAGEM;
+create database tp100cartoes;
+use tp100cartoes;
 
 /*==============================================================*/
 /* Table: CARREGAMENTO                                          */
@@ -66,10 +49,10 @@ create table PASSE
    BI                   int not null,
    NOME                 char(50) not null,
    NIF                  int not null,
-   PROFISSAO            char(40) not null,
+   PROFISSAO            char(60) not null,
    ESTADOCIVIL          char(25) not null,
-   TELEMOVEL            int not null,
-   MORADA               char(260) not null,
+   TELEMOVEL            char(40) not null,
+   MORADA               char(255) not null,
    DATANASCIMENTO       timestamp not null,
    primary key (IDCARTAO)
 );
@@ -113,7 +96,9 @@ alter table CARREGAMENTO add constraint FK_REFERENCE_7 foreign key (IDCARTAO)
 alter table PASSE add constraint FK_INHERITANCE_1 foreign key (IDCARTAO)
       references CARTAO (IDCARTAO) on delete restrict on update restrict;
 
-alter table TITULO add constraint FK_INHERITANCE_1 foreign key (IDCARTAO)
+/*alter table TITULO add constraint FK_INHERITANCE_1 foreign key (IDCARTAO)*/
+/*      references CARTAO (IDCARTAO) on delete restrict on update restrict;*/
+alter table TITULO add constraint FK_INHERITANCE_2 foreign key (IDCARTAO)
       references CARTAO (IDCARTAO) on delete restrict on update restrict;
 
 alter table VALIDACAO add constraint FK_REFERENCE_6 foreign key (IDCARTAO)
@@ -125,3 +110,94 @@ alter table VALIDACAO add constraint FK_RELATIONSHIP_10 foreign key (IDVIAGEM)
 alter table VALIDACAO add constraint FK_RELATIONSHIP_9 foreign key (IDOPERADOR)
       references OPERADOR (IDOPERADOR) on delete restrict on update restrict;
 
+
+load data infile "D:/DBTP2New/DBTP100cartoes/VIAGEM" into table VIAGEM fields terminated by "|" lines terminated by "\r\n";
+load data infile "D:/DBTP2New/DBTP100cartoes/OPERADOR" into table OPERADOR fields terminated by "|" lines terminated by "\r\n";
+load data infile "D:/DBTP2New/DBTP100cartoes/CARTAO" into table CARTAO fields terminated by "|" lines terminated by "\r\n";
+load data infile "D:/DBTP2New/DBTP100cartoes/TITULO" into table TITULO fields terminated by "|" lines terminated by "\r\n";
+load data infile "D:/DBTP2New/DBTP100cartoes/PASSE" into table PASSE fields terminated by "|" lines terminated by "\r\n";
+load data infile "D:/DBTP2New/DBTP100cartoes/CARREGAMENTO" into table CARREGAMENTO fields terminated by "|" lines terminated by "\r\n";
+load data infile "D:/DBTP2New/DBTP100cartoes/VALIDACAO" into table VALIDACAO fields terminated by "|" lines terminated by "\r\n";
+
+DELIMITER $$
+CREATE PROCEDURE lucros()
+BEGIN 
+	declare counterOperadores INT default 0;
+	declare counterViagens INT default 0;
+	declare counterUpdates INT default 0;
+	declare idviagemaux INT;
+	declare idoperadoraux INT;
+	declare counter INT;
+	declare nomeaux varchar(50);
+	declare lucroaux float;
+
+	DECLARE done INT default false;
+
+	declare operadorCursor Cursor for select idoperador, nome from operador;
+	declare viagemCursor Cursor for select id from viagem;
+
+	declare continue handler for not found set done := true;
+
+	drop temporary table if exists lucro;
+	create temporary table lucro
+	(
+	   IDOPERADOR           int,
+	   NOME                 char(50),
+	   LUCRO 				float default 0,
+		primary key (IDOPERADOR)
+	) ENGINE = MEMORY;
+
+	open operadorCursor;
+	operadorLoop1 : loop
+		fetch operadorCursor into idoperadoraux , nomeaux ;
+		if done then
+			set done := false;
+			leave operadorLoop1;
+		end if;
+		insert into lucro (IDOPERADOR, NOME, LUCRO) values (idoperadoraux, nomeaux, 0);
+	end loop operadorLoop1;
+	close operadorCursor;
+
+	open viagemCursor;
+	viagemLoop : loop
+		fetch viagemCursor into idviagemaux;
+
+		select count(*) into counter from validacao where idviagem = idviagemaux;
+
+		if done then
+			leave viagemLoop;
+		end if;
+
+		Nblock: begin
+		declare operadorCursor2 Cursor for select distinct idOperador from validacao where validacao.IDVIAGEM = idviagemaux;
+		open operadorCursor2;
+
+		operadorLoop : loop
+
+			fetch operadorCursor2 into idoperadoraux;
+			if done then
+				leave operadorLoop;
+			end if;
+
+			select count(*)*2/(counter) into lucroaux from validacao where idviagem = idviagemaux and idoperador = idoperadoraux;
+			update lucro set lucro = lucro + lucroaux where idoperador = idoperadoraux;
+
+			set done := false;
+
+		end loop operadorLoop;
+
+		close operadorCursor2;
+		end Nblock;
+
+		set done := false;
+	end loop viagemLoop;
+
+	close viagemCursor;
+
+	select IDOPERADOR "ID Operador", NOME "Nome", LUCRO "Receitas" from lucro;
+	select * from (select sum(LUCRO) "Receitas aproximadas" from lucro) somaLucros, (select count(*)*2 "Receitas reais" from viagem) valorreal;
+
+END;
+$$ DELIMITER ;
+
+call lucros();

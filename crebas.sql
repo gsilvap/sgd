@@ -127,14 +127,6 @@ create table VIAGEM
    primary key (ID)
 );
 
-load data infile "D:/DBTP/VIAGEM" into table VIAGEM fields terminated by "|" lines terminated by "\r\n";
-load data infile "D:/DBTP/OPERADOR" into table OPERADOR fields terminated by "|" lines terminated by "\r\n";
-load data infile "D:/DBTP/CARTAO" into table CARTAO fields terminated by "|" lines terminated by "\r\n";
-load data infile "D:/DBTP/TITULO" into table TITULO fields terminated by "|" lines terminated by "\r\n";
-load data infile "D:/DBTP/PASSE" into table PASSE fields terminated by "|" lines terminated by "\r\n";
-load data infile "D:/DBTP/CARREGAMENTO" into table CARREGAMENTO fields terminated by "|" lines terminated by "\r\n";
-load data infile "D:/DBTP/VALIDACAO" into table VALIDACAO fields terminated by "|" lines terminated by "\r\n";
-
 alter table CARREGAMENTO add constraint FK_REFERENCE_7 foreign key (IDCARTAO)
       references CARTAO (IDCARTAO) on delete restrict on update restrict;
 
@@ -154,6 +146,24 @@ alter table VALIDACAO add constraint FK_RELATIONSHIP_10 foreign key (IDVIAGEM)
 
 alter table VALIDACAO add constraint FK_RELATIONSHIP_9 foreign key (IDOPERADOR)
       references OPERADOR (IDOPERADOR) on delete restrict on update restrict;
+
+
+load data infile "D:/DBTP2New/DBTP100cartoes/VIAGEM" into table VIAGEM fields terminated by "|" lines terminated by "\r\n";
+load data infile "D:/DBTP2New/DBTP100cartoes/OPERADOR" into table OPERADOR fields terminated by "|" lines terminated by "\r\n";
+load data infile "D:/DBTP2New/DBTP100cartoes/CARTAO" into table CARTAO fields terminated by "|" lines terminated by "\r\n";
+load data infile "D:/DBTP2New/DBTP100cartoes/TITULO" into table TITULO fields terminated by "|" lines terminated by "\r\n";
+load data infile "D:/DBTP2New/DBTP100cartoes/PASSE" into table PASSE fields terminated by "|" lines terminated by "\r\n";
+load data infile "D:/DBTP2New/DBTP100cartoes/CARREGAMENTO" into table CARREGAMENTO fields terminated by "|" lines terminated by "\r\n";
+load data infile "D:/DBTP2New/DBTP100cartoes/VALIDACAO" into table VALIDACAO fields terminated by "|" lines terminated by "\r\n";
+
+
+load data infile "D:/DBTP/VIAGEM" into table VIAGEM fields terminated by "|" lines terminated by "\r\n";
+load data infile "D:/DBTP/OPERADOR" into table OPERADOR fields terminated by "|" lines terminated by "\r\n";
+load data infile "D:/DBTP/CARTAO" into table CARTAO fields terminated by "|" lines terminated by "\r\n";
+load data infile "D:/DBTP/TITULO" into table TITULO fields terminated by "|" lines terminated by "\r\n";
+load data infile "D:/DBTP/PASSE" into table PASSE fields terminated by "|" lines terminated by "\r\n";
+load data infile "D:/DBTP/CARREGAMENTO" into table CARREGAMENTO fields terminated by "|" lines terminated by "\r\n";
+load data infile "D:/DBTP/VALIDACAO" into table VALIDACAO fields terminated by "|" lines terminated by "\r\n";
 
 drop PROCEDURE lucrosViagem;
 
@@ -184,4 +194,4 @@ $$ DELIMITER ;
 select idoperador, nome from operador;
 
 call lucrosViagem(2);
-call lucrosViagemOperador(2,3);
+call lucrosViagemOperador(2,1);
